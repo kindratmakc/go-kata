@@ -8,12 +8,18 @@ import (
 func Sum(input string) (int, error) {
 	numbers := split(input)
 	integers := toInt(numbers)
+	var filtered []int
+	for _, integer := range integers {
+		if integer <= 1000 {
+			filtered = append(filtered, integer)
+		}
+	}
 	err := checkForNegatives(integers)
 	if nil != err {
 		return 0, err
 	}
 
-	return sum(integers), nil
+	return sum(filtered), nil
 }
 
 func checkForNegatives(integers []int) error {

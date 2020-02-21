@@ -34,3 +34,8 @@ func TestSumReturnsErrorWithNegativeNumbers(t *testing.T) {
 	_, err := Sum("-1,2,-2")
 	assert.EqualError(t, err, "negatives not allowed: -1,-2")
 }
+
+func TestSumIgnoresNumbersGreaterThan1000(t *testing.T) {
+	result, _ := Sum("5,1001,1000")
+	assert.Equal(t, 1005, result)
+}
