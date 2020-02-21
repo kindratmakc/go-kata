@@ -20,3 +20,7 @@ func TestSumManyNumberDelimitedByComma(t *testing.T) {
 func TestSumNumbersDelimitedByCommaAndNewLine(t *testing.T) {
 	assert.Equal(t, 7, Sum("1\n2,4"))
 }
+
+func TestSumNumbersWithOptionalDelimiter(t *testing.T) {
+	assert.Equal(t, 3, Sum("//;\n1;2"))
+}

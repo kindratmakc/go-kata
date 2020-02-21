@@ -20,6 +20,19 @@ func sum(numbers []int) int {
 
 func split(input string) []int {
 	var result []int
+	hasDelimiter := -1 != strings.Index(input, "//")
+	if hasDelimiter {
+		newLineAt := strings.Index(input, "\n")
+		delimiter := input[2:newLineAt]
+		withoutDelimiter := input[newLineAt+1:]
+		byDelimiter := strings.Split(withoutDelimiter, delimiter)
+		for _, number := range byDelimiter {
+			result = addToSlice(number, result)
+		}
+
+		return result
+	}
+
 	byComma := strings.Split(input, ",")
 	for _, number := range byComma {
 		if hasNewLine(number) {
