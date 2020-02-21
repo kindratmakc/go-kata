@@ -1,9 +1,17 @@
 package strcalc
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func Sum(numbers string) int {
-	result, _ := strconv.Atoi(numbers)
+	result := 0
+	splitted := strings.Split(numbers, ",")
+	for _, number := range splitted {
+		integer, _ := strconv.Atoi(number)
+		result += integer
+	}
 
 	return result
 }

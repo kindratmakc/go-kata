@@ -12,3 +12,7 @@ func TestSumEmptyStringIsZero(t *testing.T) {
 func TestSumOneNumber(t *testing.T) {
 	assert.Equal(t, 1, Sum("1"))
 }
+
+func TestSumTwoNumbersDelimitedByComma(t *testing.T) {
+	assert.Equal(t, 3, Sum("1,2"))
+}
