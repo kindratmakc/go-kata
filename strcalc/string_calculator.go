@@ -7,34 +7,42 @@ import (
 
 func Sum(input string) (int, error) {
 	numbers := split(input)
-	integers := toInt(numbers)
-	var filtered []int
-	for _, integer := range integers {
-		if integer <= 1000 {
-			filtered = append(filtered, integer)
-		}
-	}
-	err := checkForNegatives(integers)
+	ints := toInt(numbers)
+	ints = removeGraterThan1000(ints)
+	err := checkForNegatives(ints)
 	if nil != err {
 		return 0, err
 	}
 
-	return sum(filtered), nil
+	return sum(ints), nil
+}
+
+func removeGraterThan1000(ints []int) []int {
+	return filterInts(ints, func(i int) bool {
+		return i <= 1000
+	})
 }
 
 func checkForNegatives(integers []int) error {
-	var negatives []int
-	for _, integer := range integers {
-		if integer < 0 {
-			negatives = append(negatives, integer)
-		}
-	}
+	negatives := filterInts(integers, func(i int) bool {
+		return i < 0
+	})
 
 	if len(negatives) > 0 {
 		return NegativesNotAllowedError{Negatives: negatives}
 	}
 
 	return nil
+}
+
+func filterInts(ints []int, filter func(int) bool) []int {
+	var filtered []int
+	for _, i := range ints {
+		if filter(i) {
+			filtered = append(filtered, i)
+		}
+	}
+	return filtered
 }
 
 func toInt(numbers []string) []int {
