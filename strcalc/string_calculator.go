@@ -5,8 +5,30 @@ import (
 	"strings"
 )
 
-func Sum(input string) int {
-	return sum(toInt(split(input)))
+func Sum(input string) (int, error) {
+	numbers := split(input)
+	integers := toInt(numbers)
+	err := checkForNegatives(integers)
+	if nil != err {
+		return 0, err
+	}
+
+	return sum(integers), nil
+}
+
+func checkForNegatives(integers []int) error {
+	var negatives []int
+	for _, integer := range integers {
+		if integer < 0 {
+			negatives = append(negatives, integer)
+		}
+	}
+
+	if len(negatives) > 0 {
+		return NegativesNotAllowedError{Negatives: negatives}
+	}
+
+	return nil
 }
 
 func toInt(numbers []string) []int {
