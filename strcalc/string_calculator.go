@@ -1,5 +1,9 @@
 package strcalc
 
-func Sum(_ string) int {
-	return 0
+import "strconv"
+
+func Sum(numbers string) int {
+	result, _ := strconv.Atoi(numbers)
+
+	return result
 }
