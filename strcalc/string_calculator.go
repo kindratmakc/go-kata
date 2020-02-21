@@ -6,7 +6,17 @@ import (
 )
 
 func Sum(input string) int {
-	return sum(split(input))
+	return sum(toInt(split(input)))
+}
+
+func toInt(numbers []string) []int {
+	var result []int
+	for _, number := range numbers {
+		integer, _ := strconv.Atoi(number)
+		result = append(result, integer)
+	}
+
+	return result
 }
 
 func sum(numbers []int) int {
@@ -18,44 +28,47 @@ func sum(numbers []int) int {
 	return result
 }
 
-func split(input string) []int {
-	var result []int
-	hasDelimiter := -1 != strings.Index(input, "//")
-	if hasDelimiter {
-		newLineAt := strings.Index(input, "\n")
-		delimiter := input[2:newLineAt]
-		withoutDelimiter := input[newLineAt+1:]
-		byDelimiter := strings.Split(withoutDelimiter, delimiter)
-		for _, number := range byDelimiter {
-			result = addToSlice(number, result)
-		}
+func split(input string) []string {
+	if hasOptionalDelimiter(input) {
+		delimiter := getDelimiter(input)
+		withoutDelimiter := removeDelimiter(input)
+		byDelimiter := splitByDelimiter(withoutDelimiter, delimiter)
 
-		return result
+		return byDelimiter
 	}
 
-	byComma := strings.Split(input, ",")
-	for _, number := range byComma {
-		if hasNewLine(number) {
-			byNewLine := strings.Split(number, "\n")
-			for _, number := range byNewLine {
-				result = addToSlice(number, result)
-
-			}
-		} else {
-			result = addToSlice(number, result)
-		}
-
+	var result []string
+	byComma := splitByDelimiter(input, ",")
+	for _, n := range byComma {
+		andByNewLine := splitByDelimiter(n, "\n")
+		result = append(result, andByNewLine...)
 	}
 
 	return result
 }
 
-func addToSlice(number string, result []int) []int {
-	integer, _ := strconv.Atoi(number)
+func splitByDelimiter(input, delimiter string) []string {
+	var result []string
+	byDelimiter := strings.Split(input, delimiter)
+	for _, number := range byDelimiter {
+		result = append(result, number)
+	}
 
-	return append(result, integer)
+	return result
 }
 
-func hasNewLine(number string) bool {
-	return -1 != strings.Index(number, "\n")
+func hasOptionalDelimiter(input string) bool {
+	return 0 == strings.Index(input, "//")
+}
+
+func removeDelimiter(input string) string {
+	delimiterAt := strings.Index(input, getDelimiter(input))
+
+	return input[delimiterAt+2:]
+}
+
+func getDelimiter(input string) string {
+	newLineAt := strings.Index(input, "\n")
+
+	return input[2:newLineAt]
 }
