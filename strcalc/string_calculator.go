@@ -5,24 +5,44 @@ import (
 	"strings"
 )
 
-func Sum(numbers string) int {
+func Sum(input string) int {
+	return sum(split(input))
+}
+
+func sum(numbers []int) int {
 	result := 0
-	splitted := strings.Split(numbers, ",")
-	for _, number := range splitted {
-		newLineIndex := strings.Index(number, "\n")
-		if -1 == newLineIndex {
-			integer, _ := strconv.Atoi(number)
-			result += integer
-		} else {
-			subSplit := strings.Split(number, "\n")
-			for _, subNumber := range subSplit {
-				integer, _ := strconv.Atoi(subNumber)
-				result += integer
+	for _, number := range numbers {
+		result += number
+	}
+
+	return result
+}
+
+func split(input string) []int {
+	var result []int
+	byComma := strings.Split(input, ",")
+	for _, number := range byComma {
+		if hasNewLine(number) {
+			byNewLine := strings.Split(number, "\n")
+			for _, number := range byNewLine {
+				result = addToSlice(number, result)
 
 			}
+		} else {
+			result = addToSlice(number, result)
 		}
 
 	}
 
 	return result
+}
+
+func addToSlice(number string, result []int) []int {
+	integer, _ := strconv.Atoi(number)
+
+	return append(result, integer)
+}
+
+func hasNewLine(number string) bool {
+	return -1 != strings.Index(number, "\n")
 }
