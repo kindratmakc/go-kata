@@ -5,80 +5,47 @@ import (
 )
 
 func split(input string) []string {
-	if strings.Count(input, "[") > 1 {
-		delimiters := getDelimiters(input)
-		withoutDelimiters := removeDelimiter(input)
-		byDelimiters := splitByDelimiters(withoutDelimiters, delimiters)
+	delimiters, body := parse(input)
 
-		return byDelimiters
-	}
-	if hasOptionalDelimiter(input) {
-		delimiter := getDelimiter(input)
-		withoutDelimiter := removeDelimiter(input)
-		byDelimiter := splitByDelimiter(withoutDelimiter, delimiter)
-
-		return byDelimiter
-	}
-
-	return splitByDelimiters(input, []string{",", "\n"})
+	return splitByDelimiters(delimiters, body)
 }
 
-func splitByDelimiters(input string, delimiters []string) []string {
-	res := input
+func parse(input string) ([]string, string) {
+	if hasDelimitersDeclaration(input) {
+		delimiters, body := separate(input)
 
-	for _, delim := range delimiters {
-		res = strings.ReplaceAll(res, delim, ",")
+		return parseDelimiters(delimiters), body
+	}
+	return defaultDelimiters(), input
+}
+
+func splitByDelimiters(delimiters []string, input string) []string {
+	buf := input
+	for _, delimiter := range delimiters {
+		buf = strings.ReplaceAll(buf, delimiter, ",")
 	}
 
-	return strings.Split(res, ",")
+	return strings.Split(buf, ",")
 }
 
-func splitByDelimiter(input, delimiter string) []string {
-	var result []string
-	byDelimiter := strings.Split(input, delimiter)
-	for _, number := range byDelimiter {
-		result = append(result, number)
-	}
-
-	return result
+func hasDelimitersDeclaration(input string) bool {
+	return strings.Contains(input, "//")
 }
 
-func hasOptionalDelimiter(input string) bool {
-	return 0 == strings.Index(input, "//")
-}
-
-func removeDelimiter(input string) string {
+func separate(input string) (string, string) {
 	newLineAt := strings.Index(input, "\n")
+	delimiters := input[2:newLineAt]
+	body := input[newLineAt+1:]
 
-	return input[newLineAt+1:]
+	return delimiters, body
 }
 
-func getDelimiter(input string) string {
-	newLineAt := strings.Index(input, "\n")
-
-	delimiter := input[2:newLineAt]
-	firstChar := delimiter[0:1]
-	lastChar := delimiter[len(delimiter)-1:]
-	isMultiSymbolDelimiter := firstChar == "[" && lastChar == "]"
-
-	if isMultiSymbolDelimiter {
-		return delimiter[1 : len(delimiter)-1]
-	}
-
-	return delimiter
+func parseDelimiters(input string) []string {
+	return strings.FieldsFunc(input, func(c rune) bool {
+		return c == ']' || c == '['
+	})
 }
 
-func getDelimiters(input string) []string {
-	newLineAt := strings.Index(input, "\n")
-
-	var res []string
-	delimiters := strings.Split(input[2:newLineAt], "]")
-	for _, elem := range delimiters {
-		if elem == "" {
-			break
-		}
-		res = append(res, elem[1:])
-	}
-
-	return res
+func defaultDelimiters() []string {
+	return []string{",", "\n"}
 }
