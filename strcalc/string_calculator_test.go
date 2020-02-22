@@ -44,3 +44,8 @@ func TestSumWithMultiSymbolDelimiter(t *testing.T) {
 	result, _ := Sum("//[***]\n1***2***3")
 	assert.Equal(t, 6, result)
 }
+
+func TestSumNumberWithMultipleOptionalDelimiters(t *testing.T) {
+	result, _ := Sum("//[*][%]\n1*2%3")
+	assert.Equal(t, 6, result)
+}
