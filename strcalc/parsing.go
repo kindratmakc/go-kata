@@ -24,32 +24,13 @@ func split(input string) []string {
 }
 
 func splitByDelimiters(input string, delimiters []string) []string {
-	var res []string
-	buf := ""
-	for _, c := range input {
-		char := string(c)
-		if isDelimiter(char, delimiters) {
-			res = append(res, buf)
-			buf = ""
-			continue
-		}
-		buf += char
-	}
-	if len(buf) > 0 {
-		res = append(res, buf)
+	res := input
+
+	for _, delim := range delimiters {
+		res = strings.ReplaceAll(res, delim, ",")
 	}
 
-	return res
-}
-
-func isDelimiter(char string, delims []string) bool {
-	for _, delim := range delims {
-		if char == delim {
-			return true
-		}
-	}
-
-	return false
+	return strings.Split(res, ",")
 }
 
 func splitByDelimiter(input, delimiter string) []string {
