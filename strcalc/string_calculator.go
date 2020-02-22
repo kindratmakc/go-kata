@@ -1,5 +1,6 @@
 package strcalc
 
+// https://kata-log.rocks/string-calculator-kata
 func Sum(input string) (int, error) {
 	numbers := split(input)
 	ints := toInt(numbers)
