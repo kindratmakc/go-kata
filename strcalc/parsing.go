@@ -36,13 +36,22 @@ func hasOptionalDelimiter(input string) bool {
 }
 
 func removeDelimiter(input string) string {
-	delimiterAt := strings.Index(input, getDelimiter(input))
+	newLineAt := strings.Index(input, "\n")
 
-	return input[delimiterAt+2:]
+	return input[newLineAt+1:]
 }
 
 func getDelimiter(input string) string {
 	newLineAt := strings.Index(input, "\n")
 
-	return input[2:newLineAt]
+	delimiter := input[2:newLineAt]
+	firstChar := delimiter[0:1]
+	lastChar := delimiter[len(delimiter)-1:]
+	isMultiSymbolDelimiter := firstChar == "[" && lastChar == "]"
+
+	if isMultiSymbolDelimiter {
+		return delimiter[1 : len(delimiter)-1]
+	}
+
+	return delimiter
 }
