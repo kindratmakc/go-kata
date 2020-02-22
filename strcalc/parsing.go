@@ -20,14 +20,7 @@ func split(input string) []string {
 		return byDelimiter
 	}
 
-	var result []string
-	byComma := splitByDelimiter(input, ",")
-	for _, n := range byComma {
-		andByNewLine := splitByDelimiter(n, "\n")
-		result = append(result, andByNewLine...)
-	}
-
-	return result
+	return splitByDelimiters(input, []string{",", "\n"})
 }
 
 func splitByDelimiters(input string, delimiters []string) []string {
